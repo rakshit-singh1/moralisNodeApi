@@ -595,47 +595,107 @@ app.post("/8_NFT_Owner_by_Id/:address", async (req, res) => {
     }
 });
 
-app.post("/9_NFT_Owner_by_Collection", async (req, res) => {
+app.post("/9_NFT_Owner_by_Collection/:address", async (req, res) => {
     try {
         const chain = EvmChain.SEPOLIA;
         const response = await Moralis.EvmApi.nft.getNFTOwners({
-            address: "0xEFA8914380D57710De8dA5E64544E2FC53ed8D9F",
+            address:// "0xEFA8914380D57710De8dA5E64544E2FC53ed8D9F",
+                req.params.address,
             chain,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const data = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            
+            flag: true,
+            Message: "NFTs",
+            responseResult: {
+                result: data.result.map((element) => ({
+                token_address: element.token_address,
+                token_id: element.token_id,
+                owner_of: element.owner_of,
+                block_number: element.block_number,
+                block_number_minted: element.block_number_minted,
+                token_hash: element.token_hash,
+                amount:element.amount,
+                contract_type: element.contract_type,
+                }))
+            },
+        };
+        console.log(cleaned_response);
+        res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
     }
 });
 
-app.post("/10_NFT_Lowest_Price", async (req, res) => {
+app.post("/10_NFT_Lowest_Price/:address/:marketplace", async (req, res) => {
     try {
         const chain = EvmChain.ETHEREUM;
         const response = await Moralis.EvmApi.nft.getNFTLowestPrice({
-            address: "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D",
+            address:// "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D",
+                req.params.address,
             chain,
-            marketplace: "opensea",
+            marketplace: //"opensea",
+                req.params.marketplace,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const element = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            flag: true,
+            Message: "NFTs",
+            responseResult: {
+                "transaction_hash": element.transaction_hash,
+                "seller_address": element.seller_address,
+                "buyer_address": element.buyer_address,
+                "token_address": element.token_address,
+                "marketplace_address": element.marketplace_address,
+                "marketplace_address": element.marketplace_address,
+                "price": element.price,
+                "block_timestamp": element.block_timestamp,
+                "block_number": element.block_number,
+                "block_hash": element.block_hash
+                
+            },
+        };
+        console.log(cleaned_response);
+        res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
     }
 });
 
-app.post("/11_NFT_Trades_By_Marketplace", async (req, res) => {
+app.post("/11_NFT_Trades_By_Marketplace/:address/:marketplace", async (req, res) => {
     try {
         const chain = EvmChain.ETHEREUM;
         const response = await Moralis.EvmApi.nft.getNFTTrades({
-            address: "0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB",
+            address: //"0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB",
+                req.params.address,
             chain,
-            marketplace: "opensea",
+            marketplace: //"opensea",
+                req.params.marketplace,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const data = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            flag: true,
+            Message: "NFTs",
+            responseResult: {
+                result: data.result.map((element) => ({
+                "transaction_hash": element.transaction_hash,
+                "seller_address": element.seller_address,
+                "buyer_address": element.buyer_address,
+                "token_address": element.token_address,
+                "marketplace_address": element.marketplace_address,
+                "marketplace_address": element.marketplace_address,
+                "price": element.price,
+                "block_timestamp": element.block_timestamp,
+                "block_number": element.block_number,
+                "block_hash": element.block_hash
+                }))
+            },
+        };
+        console.log(cleaned_response);
+        res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
