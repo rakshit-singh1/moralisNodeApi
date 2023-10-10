@@ -22,7 +22,7 @@ app.post("/1_Wallet_details/:address", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -40,7 +40,7 @@ app.post("/2_Native_balance/:address", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -55,12 +55,13 @@ app.post("/3_NFT_balance/:address", async (req, res) => {
         });
         const cleaned_response = {
             statusCode: 200,
+            flag: true,
             Message: "NFT Balance of a single chain",
             responseResult: {
                 result: response.result.map((nft) => ({
-                amount: nft.amount,
-                name: nft.name,
-                symbol: nft.symbol,
+                    amount: nft.amount,
+                    name: nft.name,
+                    symbol: nft.symbol,
                 })),
             },
         };
@@ -74,18 +75,20 @@ app.post("/3_NFT_balance/:address", async (req, res) => {
                 chain,
             });
             const cleaned_response1 = {
+                statusCode: 200,
+                flag: true,
                 Message: `NFT Balance of a ${JSON.stringify(chain)} chain`,
                 responseResult: JSON.stringify({
                     result: response1.result.map((nft) => ({
-                    amount: nft.amount,
-                    name: nft.name,
-                    symbol: nft.symbol,
+                        amount: nft.amount,
+                        name: nft.name,
+                        symbol: nft.symbol,
                     })),
                 }),
             };
             allNFTs.push(cleaned_response1);
         }
-        console.log("flgmkjlnhkjnykty",allNFTs);
+        console.log("flgmkjlnhkjnykty", allNFTs);
         res.status(200).send(`
             A:
             ${a}
@@ -94,7 +97,7 @@ app.post("/3_NFT_balance/:address", async (req, res) => {
         `);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -108,15 +111,16 @@ app.post("/4_ERC20_balance/:address", async (req, res) => {
             chain,
         });
         const data = JSON.parse(JSON.stringify(response));
-        console.log(data[1]);
+        //console.log(data[1]);
         const cleaned_response = {
             statusCode: 200,
+            flag: true,
             Message: "Wallet balance as per perticular token",
             responseResult: {
                 result: data.map((element) => ({
-                name: element.name,
-                balance: element.balance,
-                symbol: element.symbol,
+                    name: element.name,
+                    balance: element.balance,
+                    symbol: element.symbol,
                 })),
             },
         };
@@ -124,7 +128,7 @@ app.post("/4_ERC20_balance/:address", async (req, res) => {
         res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -140,6 +144,7 @@ app.post("/5_transactions/:address", async (req, res) => {
         const data = JSON.parse(JSON.stringify(response));
         const cleaned_response = {
             statusCode: 200,
+            flag: true,
             "page_size": data.page_size,
             "page": data.page,
             Message: "Transactions for given wallet address",
@@ -164,7 +169,7 @@ app.post("/5_transactions/:address", async (req, res) => {
         res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -181,6 +186,7 @@ app.post("/6_NFT_transfer/:address", async (req, res) => {
         const data = JSON.parse(JSON.stringify(response));
         const cleaned_response = {
             statusCode: 200,
+            flag: true,
             "page_size": data.page_size,
             "page": data.page,
             Message: "Transactions for given wallet address",
@@ -204,7 +210,7 @@ app.post("/6_NFT_transfer/:address", async (req, res) => {
         res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -220,6 +226,7 @@ app.post("/7_ERC20_transfers/:address", async (req, res) => {
         const data = JSON.parse(JSON.stringify(response));
         const cleaned_response = {
             statusCode: 200,
+            flag: true,
             "page_size": data.page_size,
             "page": data.page,
             Message: "Transactions for given wallet address",
@@ -241,7 +248,7 @@ app.post("/7_ERC20_transfers/:address", async (req, res) => {
         console.log(cleaned_response)
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -256,7 +263,7 @@ app.post("/8_address_by_domain/:domain", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -271,7 +278,7 @@ app.post("/9_name_by_address/:address", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -286,7 +293,7 @@ app.post("/10_name_by_nstopable_domain", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -305,7 +312,7 @@ app.post("/1_NFT_by_contract/:address", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -326,7 +333,7 @@ app.post("/2_NFT_Metadata/:address", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -343,7 +350,7 @@ app.post("/3_NFT_transfer_by_block", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -358,7 +365,7 @@ app.post("/4_NFT_transfer_by_Collection", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -375,7 +382,7 @@ app.post("/5_NFT_transfer_by_Id", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -390,7 +397,7 @@ app.post("/6_NFT_Collection_by_wallet", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -405,7 +412,7 @@ app.post("/7_NFT_Owner_by_contract", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -421,7 +428,7 @@ app.post("/8_NFT_Owner_by_Id", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -436,7 +443,7 @@ app.post("/9_NFT_Owner_by_Collection", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -452,7 +459,7 @@ app.post("/10_NFT_Lowest_Price", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -468,7 +475,7 @@ app.post("/11_NFT_Trades_By_Marketplace", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -485,7 +492,7 @@ app.post("/1_ERC20_Token_Price", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -500,7 +507,7 @@ app.post("/2_ERC20_transfer_by_contract", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -521,7 +528,7 @@ app.post("/3_Get_Pair_Address_Of_Sushiswap", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -537,7 +544,7 @@ app.post("/4_Pair_Reserves_Of_Sushiswap", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -557,7 +564,7 @@ app.post("/5_Pair_Address_Of_Uniswap", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -573,7 +580,7 @@ app.post("/6_Uniswap_Pair_Reserves", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -587,7 +594,7 @@ app.post("/1_Top_ERC20_Tokens_By_Market_Cap", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
@@ -599,35 +606,58 @@ app.post("/2_Top_ERC20_Tokens_By_Price_Change", async (req, res) => {
         res.status(200).json(response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
 /*------------------------------Blockchain API------------------------------*/
 
-app.post("/1_Logs_Of_Contract", async (req, res) => {
+app.post("/1_Logs_Of_Contract/:address/:topic0", async (req, res) => {
     try {
-        const address = "0xEFA8914380D57710De8dA5E64544E2FC53ed8D9F";
+        //const address = "0xEFA8914380D57710De8dA5E64544E2FC53ed8D9F";
+        const address = req.params.address;
         const chain = EvmChain.SEPOLIA;
         const response = await Moralis.EvmApi.events.getContractLogs({
             address,
-            topic0:
-                "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62",
+            topic0:req.params.topic0,
+                // "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62",
             chain,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const data = JSON.parse(JSON.stringify(response));
+        //console.log(data[1]);
+        const cleaned_response = {
+            statusCode: 200,
+            flag: true,
+            Message: "Logs Of Contract",
+            responseResult: {
+                result: data.result.map((element) => ({
+                    transaction_hash:element.transaction_hash,
+                    address:element.address,
+                    block_timestamp:element.block_timestamp,
+                    block_number:element.block_number,
+                    block_hash:element.block_hash,
+                    data:element.data,
+                    topic0:element.topic0,
+                    topic1:element.topic1,
+                    topic2:element.topic2,
+                    topic3:element.topic3,
+                })),
+            },
+        };
+        console.log(cleaned_response);
+        res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
-app.post("/2_Events_Of_Contract", async (req, res) => {
+app.post("/2_Events_Of_Contract/:address/:topic", async (req, res) => {
     try {
-        const address = "0xEFA8914380D57710De8dA5E64544E2FC53ed8D9F";
-        const topic =
-            "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62";
+        //const address = "0xEFA8914380D57710De8dA5E64544E2FC53ed8D9F";
+        const address = req.params.address;
+        const topic = req.params.topic
+            // "0xc3d58168c5ae7397731d063d5bbf3d657854427343f4c083240f7aacaa2d0f62";
         // "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0";
         const chain = EvmChain.SEPOLIA;
         const abi =
@@ -681,11 +711,29 @@ app.post("/2_Events_Of_Contract", async (req, res) => {
             topic,
             abi,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const data = JSON.parse(JSON.stringify(response));
+        //console.log(data[1]);
+        const cleaned_response = {
+            statusCode: 200,
+            flag: true,
+            Message: "Events of contract",
+            responseResult: {
+                result: data.result.map((element) => ({
+                    transaction_hash: element.transaction_hash,
+                    address: element.address,
+                    block_timestamp: element.block_timestamp,
+                    block_number: element.block_number,
+                    block_hash: element.block_hash,
+                    account: element.data.account,
+                    operator: element.data.operator,
+                })),
+            },
+        };
+        console.log(cleaned_response);
+        res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ flag: false, error: error.message });
     }
 });
 
