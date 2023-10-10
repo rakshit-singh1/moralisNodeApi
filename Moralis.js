@@ -57,7 +57,7 @@ app.post("/3_NFT_balance/:address", async (req, res) => {
             
             flag: true,
             Message: "NFT Balance of a single chain",
-            responseResult: {
+            gatheredResult: {
                 result: response.result.map((nft) => ({
                     amount: nft.amount,
                     name: nft.name,
@@ -78,7 +78,7 @@ app.post("/3_NFT_balance/:address", async (req, res) => {
                 
                 flag: true,
                 Message: `NFT Balance of a ${JSON.stringify(chain)} chain`,
-                responseResult: JSON.stringify({
+                gatheredResult: JSON.stringify({
                     result: response1.result.map((nft) => ({
                         amount: nft.amount,
                         name: nft.name,
@@ -116,7 +116,7 @@ app.post("/4_ERC20_balance/:address", async (req, res) => {
             
             flag: true,
             Message: "Wallet balance as per perticular token",
-            responseResult: {
+            gatheredResult: {
                 result: data.map((element) => ({
                     name: element.name,
                     balance: element.balance,
@@ -148,7 +148,7 @@ app.post("/5_transactions/:address", async (req, res) => {
             "page_size": data.page_size,
             "page": data.page,
             Message: "Transactions for given wallet address",
-            responseResult: {
+            gatheredResult: {
                 result: data.result.map((element) => ({
                     hash: element.hash,
                     nonce: element.nonce,
@@ -190,7 +190,7 @@ app.post("/6_NFT_transfer/:address", async (req, res) => {
             "page_size": data.page_size,
             "page": data.page,
             Message: "Transactions for given wallet address",
-            responseResult: {
+            gatheredResult: {
                 result: data.result.map((element) => ({
                     block_number: element.block_number,
                     block_timestamp: element.block_number,
@@ -230,7 +230,7 @@ app.post("/7_ERC20_transfers/:address", async (req, res) => {
             "page_size": data.page_size,
             "page": data.page,
             Message: "Transactions for given wallet address",
-            responseResult: {
+            gatheredResult: {
                 result: data.result.map((element) => ({
                     token_name: element.token_name,
                     token_symbol: element.token_symbol,
@@ -259,8 +259,13 @@ app.post("/8_address_by_domain/:domain", async (req, res) => {
         const response = await Moralis.EvmApi.resolve.resolveENSDomain({
             domain,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const data = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            flag: true,
+            address:data.address,
+        };
+        res.status(200).json(cleaned_response);
+        console.log(cleaned_response)
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
@@ -274,23 +279,33 @@ app.post("/9_name_by_address/:address", async (req, res) => {
         const response = await Moralis.EvmApi.resolve.resolveAddress({
             address,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const data = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            flag: true,
+            name:data.name,
+        };
+        res.status(200).json(cleaned_response);
+        console.log(cleaned_response);
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
     }
 });
 
-app.post("/10_name_by_nstopable_domain", async (req, res) => {
+app.post("/10_name_by_nstopable_domain/:domain", async (req, res) => {
     try {
         // const domain = "brad.crypto";
         const domain = req.params.domain;
         const response = await Moralis.EvmApi.resolve.resolveDomain({
             domain,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const data = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            flag: true,
+            address:data.address,
+        };
+        res.status(200).json(cleaned_response);
+        console.log(cleaned_response)
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
@@ -314,7 +329,7 @@ app.post("/1_NFT_by_contract/:address", async (req, res) => {
             
             flag: true,
             Message: "NFTs of a contract",
-            responseResult: {
+            gatheredResult: {
                 result: data.result.map((element) => ({
                     token_hash: element.token_hash,
                     token_address: element.token_hash,
@@ -354,7 +369,7 @@ app.post("/2_NFT_Metadata/:address/:tokenId", async (req, res) => {
             
             flag: true,
             Message: "NFTs",
-            responseResult: {
+            gatheredResult: {
             token_address: element.token_address,
             token_id: element.token_id,
             owner_of: element.owner_of,
@@ -394,7 +409,7 @@ app.post("/3_NFT_transfer_by_block/:blockNumberOrHash", async (req, res) => {
             "page_size": data.page_size,
             "page": data.page,
             Message: "Transactions in given block number",
-            responseResult: {
+            gatheredResult: {
                 result: data.result.map((element) => ({
                     "block_number": element.block_number,
                     "block_timestamp": element.block_timestamp,
@@ -432,7 +447,7 @@ app.post("/4_NFT_transfer_by_Collection/:address", async (req, res) => {
             "page_size": data.page_size,
             "page": data.page,
             Message: "Transactions in given block number",
-            responseResult: {
+            gatheredResult: {
                 result: data.result.map((element) => ({
                     "block_number": element.block_number,
                     "block_timestamp": element.block_timestamp,
@@ -471,7 +486,7 @@ app.post("/5_NFT_transfer_by_Id/:id", async (req, res) => {
             "page_size": data.page_size,
             "page": data.page,
             Message: "Transactions in given block number",
-            responseResult: {
+            gatheredResult: {
                 result: data.result.map((element) => ({
                     "block_number": element.block_number,
                     "block_timestamp": element.block_timestamp,
@@ -508,7 +523,7 @@ app.post("/6_NFT_Collection_by_wallet/:address", async (req, res) => {
             
             flag: true,
             Message: "NFT collections",
-            responseResult: {
+            gatheredResult: {
                 result: data.result.map((element) => ({
                     name: element.name,
                     token_address: element.token_address,
@@ -534,10 +549,9 @@ app.post("/7_NFT_Owner_by_contract/:address", async (req, res) => {
         });
         const data = JSON.parse(JSON.stringify(response));
         const cleaned_response = {
-            
             flag: true,
             Message: "NFTs",
-            responseResult: {
+            gatheredResult: {
                 result: data.result.map((element) => ({
                 token_address: element.token_address,
                 token_id: element.token_id,
@@ -573,7 +587,7 @@ app.post("/8_NFT_Owner_by_Id/:address", async (req, res) => {
             
             flag: true,
             Message: "NFT owner and details",
-            responseResult: {
+            gatheredResult: {
                 result: data.result.map((element) => ({
                     token_hash: element.token_hash,
                     token_address: element.token_hash,
@@ -608,7 +622,7 @@ app.post("/9_NFT_Owner_by_Collection/:address", async (req, res) => {
             
             flag: true,
             Message: "NFTs",
-            responseResult: {
+            gatheredResult: {
                 result: data.result.map((element) => ({
                 token_address: element.token_address,
                 token_id: element.token_id,
@@ -643,7 +657,7 @@ app.post("/10_NFT_Lowest_Price/:address/:marketplace", async (req, res) => {
         const cleaned_response = {
             flag: true,
             Message: "NFTs",
-            responseResult: {
+            gatheredResult: {
                 "transaction_hash": element.transaction_hash,
                 "seller_address": element.seller_address,
                 "buyer_address": element.buyer_address,
@@ -679,7 +693,7 @@ app.post("/11_NFT_Trades_By_Marketplace/:address/:marketplace", async (req, res)
         const cleaned_response = {
             flag: true,
             Message: "NFTs",
-            responseResult: {
+            gatheredResult: {
                 result: data.result.map((element) => ({
                 "transaction_hash": element.transaction_hash,
                 "seller_address": element.seller_address,
@@ -852,7 +866,7 @@ app.post("/1_Logs_Of_Contract/:address/:topic0", async (req, res) => {
             
             flag: true,
             Message: "Logs Of Contract",
-            responseResult: {
+            gatheredResult: {
                 result: data.result.map((element) => ({
                     transaction_hash:element.transaction_hash,
                     address:element.address,
@@ -940,7 +954,7 @@ app.post("/2_Events_Of_Contract/:address/:topic", async (req, res) => {
             
             flag: true,
             Message: "Events of contract",
-            responseResult: {
+            gatheredResult: {
                 result: data.result.map((element) => ({
                     transaction_hash: element.transaction_hash,
                     address: element.address,
