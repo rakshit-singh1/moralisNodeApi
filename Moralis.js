@@ -308,15 +308,35 @@ app.post("/1_NFT_by_contract/:address", async (req, res) => {
             address,
             chain,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const data = JSON.parse(JSON.stringify(response));
+        //console.log(data[1]);
+        const cleaned_response = {
+            statusCode: 200,
+            flag: true,
+            Message: "NFTs of a contract",
+            responseResult: {
+                result: data.result.map((element) => ({
+                    token_hash: element.token_hash,
+                    token_address: element.token_hash,
+                    token_id: element.token_hash,
+                    block_number_minted: element.token_hash,
+                    amount:element.token_hash,
+                    contract_type: element.token_hash,                
+                    token_uri: element.token_hash,
+                    last_token_uri_sync:element.token_hash,
+                    last_metadata_sync: element.token_hash,
+                })),
+            },
+        };
+        console.log(cleaned_response);
+        res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
     }
 });
 
-app.post("/2_NFT_Metadata/:address", async (req, res) => {
+app.post("/2_NFT_Metadata/:address/:tokenId", async (req, res) => {
     try {
         const chain = EvmChain.SEPOLIA;
         // const address = "0xEFA8914380D57710De8dA5E64544E2FC53ed8D9F";
@@ -329,15 +349,36 @@ app.post("/2_NFT_Metadata/:address", async (req, res) => {
             tokenId,
             normalizeMetadata: true,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const element = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            statusCode: 200,
+            flag: true,
+            Message: "NFTs",
+            responseResult: {
+            token_address: element.token_address,
+            token_id: element.token_id,
+            owner_of: element.owner_of,
+            block_number: element.block_number,
+            block_number_minted: element.block_number_minted,
+            token_hash: element.token_hash,
+            amount:element.amount,
+            contract_type: element.contract_type,
+            normalized_metadata: {
+                name: element.normalized_metadata.name,
+                description: element.normalized_metadata.description,
+                image: element.normalized_metadata.image,
+                    },
+            },
+        };
+        console.log(cleaned_response);
+        res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
     }
 });
 
-app.post("/3_NFT_transfer_by_block", async (req, res) => {
+app.post("/3_NFT_transfer_by_block/:blockNumberOrHash", async (req, res) => {
     try {
         const chain = EvmChain.SEPOLIA;
         const blockNumberOrHash = req.params.blockNumberOrHash;
@@ -346,40 +387,107 @@ app.post("/3_NFT_transfer_by_block", async (req, res) => {
             blockNumberOrHash,
             chain,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const data = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            statusCode: 200,
+            flag: true,
+            "page_size": data.page_size,
+            "page": data.page,
+            Message: "Transactions in given block number",
+            responseResult: {
+                result: data.result.map((element) => ({
+                    "block_number": element.block_number,
+                    "block_timestamp": element.block_timestamp,
+                    "block_hash": element.block_hash,
+                    "transaction_hash": element.transaction_hash,
+                    "contract_type": element.contract_type,
+                    "token_address": element.token_address,
+                    "token_id": element.token_id,
+                    "from_address": element.from_address,
+                    "to_address": element.to_address,
+                    "amount": element.amount,
+                })),
+            },
+        };
+        res.status(200).json(cleaned_response);
+        console.log(cleaned_response)
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
     }
 });
 
-app.post("/4_NFT_transfer_by_Collection", async (req, res) => {
+app.post("/4_NFT_transfer_by_Collection/:address", async (req, res) => {
     try {
         const chain = EvmChain.SEPOLIA;
         const response = await Moralis.EvmApi.nft.getNFTContractTransfers({
-            address: "0xEFA8914380D57710De8dA5E64544E2FC53ed8D9F",
+            address:// "0xEFA8914380D57710De8dA5E64544E2FC53ed8D9F",
+            req.params.address,
             chain,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const data = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            statusCode: 200,
+            flag: true,
+            "page_size": data.page_size,
+            "page": data.page,
+            Message: "Transactions in given block number",
+            responseResult: {
+                result: data.result.map((element) => ({
+                    "block_number": element.block_number,
+                    "block_timestamp": element.block_timestamp,
+                    "block_hash": element.block_hash,
+                    "transaction_hash": element.transaction_hash,
+                    "contract_type": element.contract_type,
+                    "token_address": element.token_address,
+                    "token_id": element.token_id,
+                    "from_address": element.from_address,
+                    "to_address": element.to_address,
+                    "amount": element.amount,
+                })),
+            },
+        };
+        res.status(200).json(cleaned_response);
+        console.log(cleaned_response)
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
     }
 });
 
-app.post("/5_NFT_transfer_by_Id", async (req, res) => {
+app.post("/5_NFT_transfer_by_Id/:id", async (req, res) => {
     try {
         const chain = EvmChain.SEPOLIA;
         const address = "0xEFA8914380D57710De8dA5E64544E2FC53ed8D9F";
         const response = await Moralis.EvmApi.nft.getNFTTransfers({
             address,
-            tokenId: 1,
+            tokenId: req.params.id,
             chain,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const data = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            statusCode: 200,
+            flag: true,
+            "page_size": data.page_size,
+            "page": data.page,
+            Message: "Transactions in given block number",
+            responseResult: {
+                result: data.result.map((element) => ({
+                    "block_number": element.block_number,
+                    "block_timestamp": element.block_timestamp,
+                    "block_hash": element.block_hash,
+                    "transaction_hash": element.transaction_hash,
+                    "contract_type": element.contract_type,
+                    "token_address": element.token_address,
+                    "token_id": element.token_id,
+                    "from_address": element.from_address,
+                    "to_address": element.to_address,
+                    "amount": element.amount,
+                })),
+            },
+        };
+        res.status(200).json(cleaned_response);
+        console.log(cleaned_response)
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
