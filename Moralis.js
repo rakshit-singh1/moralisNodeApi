@@ -718,103 +718,156 @@ app.post("/11_NFT_Trades_By_Marketplace/:address/:marketplace", async (req, res)
 
 /*------------------------------Token API------------------------------*/
 
-app.post("/1_ERC20_Token_Price", async (req, res) => {
+app.post("/1_ERC20_Token_Price/:address", async (req, res) => {
     try {
         const chain = EvmChain.ETHEREUM;
         const response = await Moralis.EvmApi.token.getTokenPrice({
-            address: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+            address: //"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+                req.params.address,
             chain,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const element = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            flag: true,
+            Message: "Token Price Data",
+            gatheredResult:element,
+        };
+        console.log(cleaned_response);
+        res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
     }
 });
 
-app.post("/2_ERC20_transfer_by_contract", async (req, res) => {
+app.post("/2_ERC20_transfer_by_contract/:address", async (req, res) => {
     try {
         const chain = EvmChain.ETHEREUM;
         const response = await Moralis.EvmApi.token.getTokenTransfers({
-            address: "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+            address: //"0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+                req.params.address,
             chain,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const data = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            
+            flag: true,
+            "page_size": data.page_size,
+            "page": data.page,
+            Message: "TOKEN Transfers for given wallet address",
+            gatheredResult: {
+                result: data.result.map((element) => ({
+                    
+                    from_address: element.from_address,
+                    to_address: element.to_address,
+                    value: element.value,
+                    block_timestamp: element.block_timestamp,
+                    block_number: element.block_number,
+                    block_hash: element.block_hash,
+                })),
+            },
+        };
+        console.log(cleaned_response);
+        res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
     }
 });
 
-app.post("/3_Get_Pair_Address_Of_Sushiswap", async (req, res) => {
+app.post("/3_Get_Pair_Address_Of_Sushiswap/:address1/:address2", async (req, res) => {
     try {
         const chain = EvmChain.ETHEREUM;
         // token 0 address, e.g. WETH token address
-        const token0Address = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
+        const token0Address = //"0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
+                        req.params.address1;
         // token 1 address, e.g. LINK token address
-        const token1Address = "0x514910771AF9Ca656af840dff83E8264EcF986CA";
+        const token1Address = //"0x514910771AF9Ca656af840dff83E8264EcF986CA";
+                        req.params.address2;
         const response = await Moralis.EvmApi.defi.getPairAddress({
             token0Address,
             token1Address,
             chain,
             exchange: "sushiswapv2",
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const element = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            flag: true,
+            pairAddress:element.pairAddress,
+        };
+        console.log(cleaned_response);
+        res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
     }
 });
 
-app.post("/4_Pair_Reserves_Of_Sushiswap", async (req, res) => {
+app.post("/4_Pair_Reserves_Of_Sushiswap/:address", async (req, res) => {
     try {
         const chain = EvmChain.ETHEREUM;
-        const pairAddress = "0xc40d16476380e4037e6b1a2594caf6a6cc8da967";
+        // const pairAddress = "0xc40d16476380e4037e6b1a2594caf6a6cc8da967";
         const response = await Moralis.EvmApi.defi.getPairReserves({
-            pairAddress,
+            pairAddress:
+            req.params.address,
             chain,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const element = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            flag: true,
+            reserves:element,
+        };
+        console.log(cleaned_response);
+        res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
     }
 });
 
-app.post("/5_Pair_Address_Of_Uniswap", async (req, res) => {
+app.post("/5_Pair_Address_Of_Uniswap/:address1/:address2", async (req, res) => {
     try {
         const chain = EvmChain.ETHEREUM;
         // token 0 address, e.g. WETH token address
-        const token0Address = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
+        const token0Address = //"0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
+                    req.params.address1;
         // token 1 address, e.g. LINK token address
-        const token1Address = "0x514910771AF9Ca656af840dff83E8264EcF986CA";
+        const token1Address = //"0x514910771AF9Ca656af840dff83E8264EcF986CA";
+                    req.params.address2;
         const response = await Moralis.EvmApi.defi.getPairAddress({
             token0Address,
             token1Address,
             chain,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const element = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            flag: true,
+            pairAddress:element.pairAddress,
+        };
+        console.log(cleaned_response);
+        res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
     }
 });
 
-app.post("/6_Uniswap_Pair_Reserves", async (req, res) => {
+app.post("/6_Uniswap_Pair_Reserves/:address", async (req, res) => {
     try {
         const chain = EvmChain.ETHEREUM;
-        const pairAddress = "0xa2107fa5b38d9bbd2c461d6edf11b11a50f6b974";
+        //const pairAddress = "0xa2107fa5b38d9bbd2c461d6edf11b11a50f6b974";
         const response = await Moralis.EvmApi.defi.getPairReserves({
-            pairAddress,
+            pairAddress:
+            req.params.address,
             chain,
         });
-        console.log(response.toJSON());
-        res.status(200).json(response);
+        const element = JSON.parse(JSON.stringify(response));
+        const cleaned_response = {
+            flag: true,
+            reserves:element,
+        };
+        console.log(cleaned_response);
+        res.status(200).json(cleaned_response);
     } catch (error) {
         console.error(error);
         res.status(500).json({ flag: false, error: error.message });
