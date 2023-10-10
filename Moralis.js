@@ -494,11 +494,12 @@ app.post("/5_NFT_transfer_by_Id/:id", async (req, res) => {
     }
 });
 
-app.post("/6_NFT_Collection_by_wallet", async (req, res) => {
+app.post("/6_NFT_Collection_by_wallet/:address", async (req, res) => {
     try {
         const chain = EvmChain.SEPOLIA;
         const response = await Moralis.EvmApi.nft.getWalletNFTCollections({
-            address: "0x668425484835D082D11e3A83b97D47705Ef6ACA4",
+            address: //"0x668425484835D082D11e3A83b97D47705Ef6ACA4",
+                req.param.address,
             chain,
         });
         console.log(response.toJSON());
